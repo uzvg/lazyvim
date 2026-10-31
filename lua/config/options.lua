@@ -1,8 +1,6 @@
 -- Options are automatically loaded before lazy.nvim startup
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
-vim.opt.number = true
-vim.opt.relativenumber = true
 
 -- 默认不让匿名寄存器与系统剪贴板同步。
 -- LazyVim 默认把 clipboard 设为 "unnamedplus"，这会让 x/s/d/c/p 等日常操作
