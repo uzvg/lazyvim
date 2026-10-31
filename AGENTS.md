@@ -16,7 +16,8 @@ Personal Neovim config built on the LazyVim starter. There is no application cod
 - `init.lua` only calls `require("config.lazy")`, which bootstraps lazy.nvim into `~/.local/share/lazyvim/lazy/lazy.nvim`.
 - `lua/config/{options,keymaps,autocmds}.lua` are sourced automatically by LazyVim (startup / VeryLazy). They are empty stubs; LazyVim supplies the defaults.
 - Add plugins as new files under `lua/plugins/`; lazy.nvim imports the whole directory. Don't add specs to `lua/config/lazy.lua` unless changing lazy.nvim itself.
-- Plugin specs are grouped by topic: `lua/plugins/{editor,ui,lsp,git,disabled}.lua` and `lua/plugins/lang/`. Add a new spec to the matching file rather than creating a catch-all plugin file.
+- Plugin specs are grouped by topic: `lua/plugins/{editor,ui,lsp,git,ai,disabled}.lua` and `lua/plugins/lang/`. Add a new spec to the matching file rather than creating a catch-all plugin file.
+- `lua/plugins/ai.lua` configures `opencode.nvim` (keymaps under `<leader>a`) and integrates it with Snacks input/picker/terminal, blink.cmp, and lualine. It loads at startup because its event/permission autocmds must be registered early.
 - The old `lua/plugins/example.lua` was removed; its upstream snippets are archived in `docs/example-plugins-reference.md`. That document is reference only — several plugins it mentions are obsolete or conflict with LazyVim v16 (blink.cmp vs nvim-cmp, Snacks picker vs telescope, typescript.nvim, the `mason-org` rename).
 - `lazyvim.json` records enabled LazyVim extras (`lang.json`, `lang.markdown`, `lang.python`, `lang.toml`, `lang.yaml`). Change it via `:LazyExtras`, not by hand. Extras add lockfile pins with no local plugin file (e.g. `SchemaStore.nvim`, `markdown-preview.nvim`, `render-markdown.nvim`, `venv-selector.nvim`) — this is expected.
 
