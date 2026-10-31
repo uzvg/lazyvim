@@ -16,6 +16,13 @@ return {
   {
     "folke/sidekick.nvim",
     opts = {
+      -- NES（next edit suggestions）由 GitHub Copilot 的 LSP 提供，
+      -- 未登录时会不断弹出 “Copilot: ... Please use :LspCopilotSignIn”。
+      -- 这里关掉 NES，LazyVim 的 extra 就不会把 copilot 加进 lspconfig 的 servers，
+      -- copilot-language-server 也就不会启动（CLI 面板 <leader>aa 不受影响）。
+      nes = {
+        enabled = false,
+      },
       cli = {
         win = {
           split = {
@@ -53,5 +60,16 @@ return {
         callback = resize,
       })
     end,
+  },
+  -- copilot-language-server 是 NES 之前通过 Mason 装进来的。即使关掉 NES，
+  -- mason-lspconfig 的 automatic_enable 仍会自动启用所有已安装的 LSP，
+  -- 所以这里显式排除 copilot，避免它启动后继续弹登录失败。
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        copilot = { enabled = false },
+      },
+    },
   },
 }
