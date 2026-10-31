@@ -17,8 +17,17 @@
 │   │   ├── options.lua       # vim.opt 选项
 │   │   ├── keymaps.lua       # 自定义快捷键
 │   │   └── autocmds.lua      # 自定义自动命令
-│   └── plugins/              # 插件配置（业务层，重点）
-│       └── example.lua       # 官方示例，被首行 guard 禁用
+│   └── plugins/              # 插件配置（业务层，按主题拆分）
+│       ├── editor.lua        # 编辑增强
+│       ├── ui.lua            # 主题、状态栏等界面
+│       ├── lsp.lua           # LSP / Mason / 格式化 / lint
+│       ├── git.lua           # Git 相关
+│       ├── disabled.lua      # 集中禁用 LazyVim 插件
+│       └── lang/
+│           └── python.lua    # Python 专属覆盖
+├── docs/
+│   ├── lazyvim-config-guide.md        # 本笔记
+│   └── example-plugins-reference.md   # 原 example.lua 的分类归档
 ├── lazyvim.json              # 已启用的 LazyVim Extras
 ├── lazy-lock.json            # 插件版本锁定文件（提交到 git）
 ├── stylua.toml               # Lua 格式化配置
@@ -277,7 +286,7 @@ return M
 5. **提交 `lazy-lock.json` 和 `lazyvim.json`**，便于复现环境。
 6. `lazyvim.json` 中 `version` / `install_version` / `news` 是自动生成的，只关心 `extras`。
 7. 修改 `options.lua` 需重启；改 `lua/plugins/*.lua` 可试 `:Lazy reload`，涉及依赖/LSP 时最稳妥是重启。
-8. `lua/plugins/example.lua` 是上游参考材料，被 `if true then return {} end` 禁用；不要移除 guard，也不要假设其中 spec 会加载。
+8. 原 `lua/plugins/example.lua` 已删除，内容按主题归档到 `docs/example-plugins-reference.md`；它是参考材料，不要整段复制启用（其中 nvim-cmp、telescope、typescript.nvim 等写法已过时）。
 
 ---
 
@@ -285,15 +294,17 @@ return M
 
 ```text
 lua/plugins/
-├── editor.lua        # 编辑增强：surround、autopairs、comment...
+├── editor.lua        # 编辑增强：surround、autopairs、treesitter 等
 ├── ui.lua            # 主题、状态栏、bufferline
-├── lsp.lua           # lspconfig / mason 覆盖
+├── lsp.lua           # lspconfig / mason / 格式化 / lint 覆盖
 ├── git.lua           # gitsigns、lazygit
-├── lang/
-│   ├── python.lua
-│   └── rust.lua
-└── disabled.lua      # 集中放 enabled = false 的插件
+├── disabled.lua      # 集中放 enabled = false 的插件
+└── lang/
+    └── python.lua    # 已启用 lang.python extra，所以先建 Python
 ```
+
+启用其他语言 extra（如 `lang.rust`）后，再在 `lua/plugins/lang/` 下增加对应的
+`rust.lua` 即可。
 
 上手顺序：
 
