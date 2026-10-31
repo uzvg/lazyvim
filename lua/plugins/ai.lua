@@ -11,6 +11,16 @@
 --   snacks.picker    Select 菜单；在 picker 里按 <a-o> 可把选中项发给 OpenCode
 --
 -- 仓库：https://github.com/nickjvandyke/opencode.nvim
+--
+-- 当前已禁用：不加载插件，也不会注册快捷键和 Snacks/blink/lualine 集成。
+-- 恢复时把下面的 `enabled` 改回 `true`。
+local enabled = false
+
+if not enabled then
+  return {
+    { "nickjvandyke/opencode.nvim", enabled = false },
+  }
+end
 
 local opencode_cmd = "opencode"
 
