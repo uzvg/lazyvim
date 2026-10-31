@@ -13,4 +13,15 @@
 --   end,
 -- },
 
-return {}
+-- Snacks 图片预览（Kitty Graphics Protocol，支持 kitty/wezterm/ghostty）。
+-- 启用后可直接打开图片，并在 Markdown 中内联渲染图片与公式。
+return {
+  {
+    "folke/snacks.nvim",
+    opts = {
+      image = {
+        enabled = true,
+      },
+    },
+  },
+}
