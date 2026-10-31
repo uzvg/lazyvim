@@ -4,8 +4,24 @@
 --   <leader>aa  Ask（输入框，自动带上 @this:）
 --   <leader>as  Select（内置 prompt / OpenCode 命令）
 --   <leader>ao  Operator（把选区或 motion 发给 OpenCode）
+--   <leader>at  Toggle OpenCode TUI
+--
+-- 与 LazyVim 组件的配合：
+--   snacks.terminal  没有服务时在右侧分屏启动 opencode TUI
+--   snacks.picker    Select 菜单；在 picker 里按 <a-o> 可把选中项发给 OpenCode
 --
 -- 仓库：https://github.com/nickjvandyke/opencode.nvim
+
+local opencode_cmd = "opencode"
+
+---@type snacks.terminal.Opts
+local terminal_opts = {
+  win = {
+    position = "right",
+    -- 启动后把焦点留在原窗口，避免打断编辑。
+    enter = false,
+  },
+}
 
 return {
   {
@@ -15,6 +31,18 @@ return {
     -- 插件通过 plugin/ 下的自动命令转发 OpencodeEvent、处理权限请求和重载文件，
     -- 因此必须在启动时加载。
     lazy = false,
+    init = function()
+      ---@type opencode.Opts
+      vim.g.opencode_opts = {
+        server = {
+          -- 没有检测到正在运行的 OpenCode 服务时，用 Snacks 终端启动一个。
+          -- opencode v2 会自动注册后台服务，插件随后会连上它。
+          start = function()
+            require("snacks.terminal").open(opencode_cmd, terminal_opts)
+          end,
+        },
+      }
+    end,
     config = function()
       local opencode = require("opencode")
 
@@ -28,6 +56,40 @@ return {
       vim.keymap.set({ "n", "x" }, "<leader>ao", function()
         return opencode.operator("@this")
       end, { desc = "Send range to OpenCode", expr = true })
+      vim.keymap.set("n", "<leader>at", function()
+        require("snacks.terminal").toggle(opencode_cmd, terminal_opts)
+      end, { desc = "Toggle OpenCode" })
+      -- 终端模式不要用 <leader> 前缀，否则在 TUI 里输入空格会等待 timeout。
+      vim.keymap.set("t", "<C-.>", function()
+        require("snacks.terminal").toggle(opencode_cmd, terminal_opts)
+      end, { desc = "Toggle OpenCode" })
     end,
+  },
+
+  {
+    "folke/snacks.nvim",
+    opts = {
+      picker = {
+        actions = {
+          ---把 picker 中选中的文件/位置格式化成 OpenCode 能理解的引用。
+          ---@param picker snacks.Picker
+          opencode_send = function(picker)
+            local items = vim.tbl_map(function(item) ---@param item snacks.picker.Item
+              return item.file and require("opencode").format({ path = item.file, from = item.pos, to = item.end_pos })
+                or item.text
+            end, picker:selected({ fallback = true }))
+
+            require("opencode").prompt(table.concat(items, ", ") .. " ")
+          end,
+        },
+        win = {
+          input = {
+            keys = {
+              ["<a-o>"] = { "opencode_send", mode = { "n", "i" }, desc = "Send to OpenCode" },
+            },
+          },
+        },
+      },
+    },
   },
 }
