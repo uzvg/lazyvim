@@ -81,6 +81,24 @@ return {
     },
   },
 
+  -- 在 LazyVim 的 lualine 右端显示 OpenCode 服务连接状态。
+  {
+    "nvim-lualine/lualine.nvim",
+    optional = true,
+    opts = function(_, opts)
+      opts.sections = opts.sections or {}
+      opts.sections.lualine_z = opts.sections.lualine_z or {}
+      table.insert(opts.sections.lualine_z, 1, {
+        function()
+          return require("opencode").statusline()
+        end,
+        cond = function()
+          return package.loaded["opencode"] ~= nil
+        end,
+      })
+    end,
+  },
+
   {
     "folke/snacks.nvim",
     opts = {
