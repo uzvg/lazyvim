@@ -66,6 +66,21 @@ return {
     end,
   },
 
+  -- opencode.nvim 的 Ask 输入框使用 snacks.input，并启动一个进程内 LSP
+  -- 来补全 @this/@buffer 等上下文。这里为 opencode_ask 文件类型显式打开
+  -- blink.cmp 的 lsp/buffer 来源。
+  {
+    "saghen/blink.cmp",
+    optional = true,
+    opts = {
+      sources = {
+        per_filetype = {
+          opencode_ask = { "lsp", "buffer" },
+        },
+      },
+    },
+  },
+
   {
     "folke/snacks.nvim",
     opts = {
