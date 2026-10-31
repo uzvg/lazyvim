@@ -26,3 +26,20 @@ Personal Neovim config built on the LazyVim starter. There is no application cod
 - `lazy-lock.json` is committed and pins exact commits. Regenerate it via lazy.nvim, never hand-edit or drop entries.
 - `lua/config/lazy.lua` sets `version = false`, so plugins track latest commits (LazyVim tracks `main`). Updates can break startup: rerun the headless check afterwards.
 - Runtime state is outside the repo: `~/.local/share/lazyvim` (plugins, Mason tools), `~/.local/state/lazyvim` (logs, sessions), `~/.cache/lazyvim`. Read those logs when debugging startup/plugin failures.
+
+## Git workflow
+
+Every feature request that changes files gets its own branch and its own set of batched commits.
+
+1. **Branch first.** Before the first edit, run `git status --short` and `git branch --show-current`.
+   - Clean tree on `main`: `git switch -c feat/<kebab-slug>`. Use the prefix that matches the work: `feat/`, `fix/`, `chore/` (tooling, deps, lockfile), or `docs/`.
+   - Dirty tree: stop and ask whether to commit, stash, or carry those changes onto the new branch. Never silently mix unrelated edits into the new branch.
+   - Already on a `feat/`/`fix/`/`chore/`/`docs/` branch for this same request: keep using it, don't branch again. A different feature request, even in the same session, branches again from `main`.
+2. **Commit in batches.** After each self-contained unit (one plugin spec, one keymap group, one lockfile refresh, one formatting pass), stage only that unit's paths with `git add <paths>` and commit immediately.
+   - Subject: Conventional Commits, e.g. `feat(plugins): add snacks toggle`, `fix(keymaps): correct <leader>gg`, `chore(lock): sync lazy-lock.json`.
+   - One concern per commit. No `git add -A` grab-bags, no empty or "WIP" commits, no bundling the whole feature into one commit at the end.
+   - Lua edits: run the headless smoke test before committing. A regression gets its own fix commit, not an amend.
+3. **Never** amend, rebase, force-push, or push. Never commit secrets, `.env` files, or runtime state from `~/.local/...`.
+4. **Report at the end:** branch name, `git log --oneline main..HEAD`, and the smoke-test result.
+
+Read-only requests (questions, explanations, code review) do not create a branch and do not commit.
