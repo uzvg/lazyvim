@@ -214,7 +214,8 @@ return {
 ```lua
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 8
-vim.opt.clipboard = "unnamedplus"
+-- 不把匿名寄存器同步到系统剪贴板：d/x/s/c 等操作不会污染系统剪贴板
+vim.opt.clipboard = ""
 ```
 
 `lua/config/keymaps.lua`：
