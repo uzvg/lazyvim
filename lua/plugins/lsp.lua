@@ -13,4 +13,18 @@
 --   opts = { ensure_installed = { "shellcheck" } },
 -- },
 
-return {}
+return {
+  {
+    "mfussenegger/nvim-lint",
+    optional = true,
+    opts = function(_, opts)
+      -- lang.markdown extra 默认给 markdown 挂了 markdownlint-cli2，
+      -- 这里移除，避免 MD013 等默认规则在打开/保存时刷诊断。
+      -- 必须用 nil 删除：lazy.nvim 深合并时 markdown = {} 不会覆盖已有列表。
+      -- markdown.mdx 会按 "." 拆分 filetype，同样复用 markdown 的配置。
+      opts.linters_by_ft = opts.linters_by_ft or {}
+      opts.linters_by_ft.markdown = nil
+      return opts
+    end,
+  },
+}
