@@ -32,4 +32,21 @@ return {
       schema = "zhengma",
     },
   },
+
+  -- outline.nvim（LazyVim 的 editor.outline extra）默认 position="right" 会执行
+  -- `botright vs`，把 outline 放到整个 tab 的最右边，即 sidekick agent 面板的
+  -- 右侧。改成 `belowright vs`：只相对当前（代码）窗口向右拆分，outline 就落在
+  -- 编辑器区右缘、agent 面板左侧。position 仍保留 right，用于 h/l 导航方向判断。
+  -- 宽度改成固定列数，避免随总列数百分比缩放。
+  {
+    "hedyhli/outline.nvim",
+    opts = {
+      outline_window = {
+        split_command = "belowright vs",
+        position = "right", -- 决定 h/l 导航方向；split_command 非空时不再影响拆分
+        relative_width = false,
+        width = 30, -- 固定 30 列
+      },
+    },
+  },
 }
