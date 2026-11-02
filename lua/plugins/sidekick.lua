@@ -38,17 +38,20 @@ return {
       --- 按比例调整已打开的面板，使其跟随编辑器窗口尺寸。
       local function resize()
         for _, session in ipairs(require("sidekick.cli.terminal").sessions()) do
-          if session:is_open() then
-            local layout = session.opts.layout
+          local sopts = session.opts or {}
+          local split = sopts.split or {}
+          local win = session.win
+          if session:is_open() and win and vim.api.nvim_win_is_valid(win) then
+            local layout = sopts.layout
             if layout == "top" or layout == "bottom" then
-              local ratio = session.opts.split.height
+              local ratio = split.height
               if ratio and ratio > 0 and ratio <= 1 then
-                vim.api.nvim_win_set_height(session.win, math.floor(vim.o.lines * ratio))
+                vim.api.nvim_win_set_height(win, math.max(1, math.floor(vim.o.lines * ratio)))
               end
             elseif layout ~= "float" then
-              local ratio = session.opts.split.width
+              local ratio = split.width
               if ratio and ratio > 0 and ratio <= 1 then
-                vim.api.nvim_win_set_width(session.win, math.floor(vim.o.columns * ratio))
+                vim.api.nvim_win_set_width(win, math.max(1, math.floor(vim.o.columns * ratio)))
               end
             end
           end

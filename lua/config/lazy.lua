@@ -34,6 +34,7 @@ require("lazy").setup({
   checker = {
     enabled = true, -- check for plugin updates periodically
     notify = false, -- notify on update
+    frequency = 86400, -- 每天一次即可：更新是手动 :Lazy sync，默认每小时只浪费网络
   }, -- automatically check for plugin updates
   performance = {
     rtp = {

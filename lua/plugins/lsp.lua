@@ -27,4 +27,27 @@ return {
       return opts
     end,
   },
+  {
+    -- 同理：conform 的 markdownlint 只在存在 source=="markdownlint" 的诊断时才运行，
+    -- nvim-lint 的 markdown 诊断已在上面的配置里移除，这条格式化链路永远不会触发。
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        markdown = { "prettier", "markdown-toc" },
+        ["markdown.mdx"] = { "prettier", "markdown-toc" },
+      },
+    },
+  },
+  {
+    -- extra 仍会把 markdownlint-cli2 加进 ensure_installed（opts_extend 会追加列表，无法覆盖），
+    -- 所以用 opts 函数在合并后过滤掉。
+    "mason-org/mason.nvim",
+    optional = true,
+    opts = function(_, opts)
+      opts.ensure_installed = vim.tbl_filter(function(tool)
+        return tool ~= "markdownlint-cli2"
+      end, opts.ensure_installed or {})
+    end,
+  },
 }
