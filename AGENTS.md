@@ -5,8 +5,11 @@ Personal Neovim config built on the LazyVim starter. There is no application cod
 ## Commands
 
 - Launch this config: `NVIM_APPNAME=lazyvim nvim`. Plain `nvim` loads `~/.config/nvim`, not this repo.
-- Headless smoke test after edits: `NVIM_APPNAME=lazyvim nvim --headless "+lua print('ok')" +qa`
-  (expected output `ok`, exit 0; startup errors print to stderr). Use this instead of opening a TUI.
+- Checks after edits (both must exit 0):
+  1. `~/.local/share/lazyvim/mason/bin/stylua --check .` — exits 2 on a syntax or formatting error in any tracked Lua file.
+  2. `NVIM_APPNAME=lazyvim nvim --headless "+lua for _,m in ipairs({'config.options','config.keymaps','config.autocmds'}) do local ok,e=pcall(require,m); if not ok then io.stderr:write('FAIL '..m..': '..tostring(e)..'\n'); vim.cmd('cq') end end" +qa`
+     — exits 1 if a config module fails to load.
+  A bare `+lua print('ok')` run proves nothing: Neovim exits 0 on `-c` Lua errors, LazyVim wraps config loads in `pcall`, and `VeryLazy` never fires headless, so `keymaps.lua` and `autocmds.lua` would not even be loaded.
 - Format Lua: `~/.local/share/lazyvim/mason/bin/stylua .` — StyLua is installed by Mason and is **not on `PATH`**.
   Settings live in `stylua.toml` (2-space indent, 120 columns).
 - Plugin install/sync/lock refresh is in-editor: `:Lazy sync` (or `:Lazy update`), then commit the lockfile.
@@ -38,8 +41,8 @@ Every feature request that changes files gets its own branch and its own set of 
 2. **Commit in batches.** After each self-contained unit (one plugin spec, one keymap group, one lockfile refresh, one formatting pass), stage only that unit's paths with `git add <paths>` and commit immediately.
    - Subject: Conventional Commits, e.g. `feat(plugins): add snacks toggle`, `fix(keymaps): correct <leader>gg`, `chore(lock): sync lazy-lock.json`.
    - One concern per commit. No `git add -A` grab-bags, no empty or "WIP" commits, no bundling the whole feature into one commit at the end.
-   - Lua edits: run the headless smoke test before committing. A regression gets its own fix commit, not an amend.
+   - Lua edits: run the checks from `## Commands` before committing. A regression gets its own fix commit, not an amend.
 3. **Never** amend, rebase, force-push, or push. Never commit secrets, `.env` files, or runtime state from `~/.local/...`.
-4. **Report at the end:** branch name, `git log --oneline main..HEAD`, and the smoke-test result.
+4. **Report at the end:** branch name, `git log --oneline main..HEAD`, and the check results.
 
 Read-only requests (questions, explanations, code review) do not create a branch and do not commit.
