@@ -1,15 +1,14 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "permissions": [
-    { "action": "shell", "resource": "git switch -c *", "effect": "allow" },
-    { "action": "shell", "resource": "git checkout -b *", "effect": "allow" },
-    { "action": "shell", "resource": "git add *", "effect": "allow" },
-    { "action": "shell", "resource": "git commit *", "effect": "allow" },
-    { "action": "shell", "resource": "git commit --amend *", "effect": "deny" },
+    { "action": "shell", "resource": "git rebase *", "effect": "deny" },
     { "action": "shell", "resource": "git push *", "effect": "deny" },
-    { "action": "shell", "resource": "git push", "effect": "deny" },
     { "action": "shell", "resource": "git reset --hard *", "effect": "deny" },
     { "action": "shell", "resource": "git clean *", "effect": "deny" },
-    { "action": "shell", "resource": "git checkout -- *", "effect": "deny" }
+    { "action": "shell", "resource": "git checkout -- *", "effect": "deny" },
+    { "action": "shell", "resource": "git checkout .", "effect": "deny" },
+    { "action": "shell", "resource": "git restore *", "effect": "deny" },
+    { "action": "shell", "resource": "git commit --amend *", "effect": "deny" },
+    { "action": "shell", "resource": "git commit * --amend*", "effect": "deny" }
   ]
 }
