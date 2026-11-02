@@ -12,6 +12,13 @@
 -- VeryLazy 时恢复此处读到的值，所以启动后 clipboard 仍然为空。
 vim.opt.clipboard = ""
 
+-- 让拼写检查放过中文。
+-- LazyVim 会对 markdown/text/typst/gitcommit 等 FileType 打开 spell，且默认
+-- spelllang={"en"}；Neovim 的拼写引擎不支持中日韩文字，CJK 字符默认全部被
+-- 当成拼写错误（红波浪线）。"cjk" 是内置的伪语言，加入后 CJK 不再算错，
+-- 英文拼写检查仍然有效，也不需要额外下载 .spl 文件。
+vim.opt.spelllang = { "en", "cjk" }
+
 -- Python 类型检查使用 basedpyright（ruff 继续负责 lint + format）。
 -- 必须在 LazyVim 加载 lang.python extra 之前设置，因此放 options.lua。
 vim.g.lazyvim_python_lsp = "basedpyright"
