@@ -11,3 +11,7 @@
 -- 必须写在用户 options.lua 中，才能覆盖 LazyVim 的默认值；LazyVim 会在
 -- VeryLazy 时恢复此处读到的值，所以启动后 clipboard 仍然为空。
 vim.opt.clipboard = ""
+
+-- Python 类型检查使用 basedpyright（ruff 继续负责 lint + format）。
+-- 必须在 LazyVim 加载 lang.python extra 之前设置，因此放 options.lua。
+vim.g.lazyvim_python_lsp = "basedpyright"
