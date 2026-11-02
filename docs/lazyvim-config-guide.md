@@ -21,17 +21,13 @@
 │       ├── editor.lua        # 编辑增强
 │       ├── ui.lua            # 主题、状态栏等界面
 │       ├── lsp.lua           # LSP / Mason / 格式化 / lint
-│       ├── git.lua           # Git 相关
-│       ├── disabled.lua      # 集中禁用 LazyVim 插件
-│       └── lang/
-│           └── python.lua    # Python 专属覆盖
+│       └── sidekick.lua      # AI 面板（ai.sidekick extra 的覆盖）
 ├── docs/
 │   ├── lazyvim-config-guide.md        # 本笔记
 │   └── example-plugins-reference.md   # 原 example.lua 的分类归档
-├── lazyvim.json              # 已启用的 LazyVim Extras
+├── lazyvim.json              # 已启用的 LazyVim Extras（唯一来源）
 ├── lazy-lock.json            # 插件版本锁定文件（提交到 git）
 ├── stylua.toml               # Lua 格式化配置
-├── .neoconf.json             # Lua LSP 的 neodev/neoconf 配置
 └── .gitignore
 ```
 
@@ -186,17 +182,7 @@ return {
 
 ### 4.4 使用 Extras
 
-当前 `lazyvim.json` 已启用：
-
-```json
-"extras": [
-  "lazyvim.plugins.extras.lang.json",
-  "lazyvim.plugins.extras.lang.markdown",
-  "lazyvim.plugins.extras.lang.python",
-  "lazyvim.plugins.extras.lang.toml",
-  "lazyvim.plugins.extras.lang.yaml"
-]
-```
+当前启用的 extras 以 `lazyvim.json` 为准，本笔记不再复制一份列表。
 
 推荐用 `:LazyExtras` 管理（搜索后按 `x` 启用/禁用，自动写回 `lazyvim.json`）。
 也可在插件文件中临时导入：
@@ -298,14 +284,11 @@ lua/plugins/
 ├── editor.lua        # 编辑增强：surround、autopairs、treesitter 等
 ├── ui.lua            # 主题、状态栏、bufferline
 ├── lsp.lua           # lspconfig / mason / 格式化 / lint 覆盖
-├── git.lua           # gitsigns、lazygit
-├── disabled.lua      # 集中放 enabled = false 的插件
-└── lang/
-    └── python.lua    # 已启用 lang.python extra，所以先建 Python
+└── sidekick.lua      # ai.sidekick extra 的覆盖
 ```
 
-启用其他语言 extra（如 `lang.rust`）后，再在 `lua/plugins/lang/` 下增加对应的
-`rust.lua` 即可。
+启用其他语言 extra（如 `lang.rust`）后，再新建 `lua/plugins/lang/rust.lua` 放对应
+覆盖即可；没有实际配置就先不建文件。
 
 上手顺序：
 
