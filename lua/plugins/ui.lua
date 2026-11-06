@@ -25,6 +25,19 @@ return {
     main = "ayu", -- lazy.nvim 默认按仓库名 require("neovim-ayu")，实际模块名是 ayu
     opts = {
       mirage = false, -- dark 变体，而不是 mirage
+      -- 背景透明：清掉这些组的 bg，露出 kitty 的终端背景（ayu 没有 transparent 选项）。
+      -- overrides 会被合并进主题自带的组，所以前景色保持不变。
+      overrides = {
+        Normal = { bg = "NONE" },
+        NormalNC = { bg = "NONE" },
+        NormalFloat = { bg = "NONE" },
+        SignColumn = { bg = "NONE" },
+        FoldColumn = { bg = "NONE" },
+        EndOfBuffer = { bg = "NONE" },
+        LineNr = { bg = "NONE" },
+        CursorLineNr = { bg = "NONE" },
+        WinSeparator = { bg = "NONE" },
+      },
     },
   },
   {
