@@ -25,19 +25,6 @@ return {
     main = "ayu", -- lazy.nvim 默认按仓库名 require("neovim-ayu")，实际模块名是 ayu
     opts = {
       mirage = false, -- dark 变体，而不是 mirage
-      -- 背景透明：清掉这些组的 bg，露出 kitty 的终端背景（ayu 没有 transparent 选项）。
-      -- overrides 会被合并进主题自带的组，所以前景色保持不变。
-      overrides = {
-        Normal = { bg = "NONE" },
-        NormalNC = { bg = "NONE" },
-        NormalFloat = { bg = "NONE" },
-        SignColumn = { bg = "NONE" },
-        FoldColumn = { bg = "NONE" },
-        EndOfBuffer = { bg = "NONE" },
-        LineNr = { bg = "NONE" },
-        CursorLineNr = { bg = "NONE" },
-        WinSeparator = { bg = "NONE" },
-      },
     },
   },
   {
@@ -62,5 +49,21 @@ return {
         enabled = true,
       },
     },
+  },
+  -- 背景透明：清掉各高亮组的背景色，露出 kitty 自己的背景与透明度。
+  -- 不能懒加载，否则启动时 VimEnter/ColorScheme 不会触发清理。
+  {
+    "xiyaowong/transparent.nvim",
+    lazy = false,
+    opts = {
+      extra_groups = { "WinSeparator" }, -- 默认列表没包含，不清的话两侧会有一条深色竖线
+    },
+    config = function(_, opts)
+      require("transparent").setup(opts)
+      vim.g.transparent_enabled = true
+      vim.keymap.set("n", "<leader>uO", function()
+        require("transparent").toggle()
+      end, { desc = "Toggle Transparency" })
+    end,
   },
 }
