@@ -15,22 +15,30 @@
 --   opts = { ensure_installed = { "dockerfile", "gitignore" } },
 -- },
 
--- 码表输入法联动：Normal/Visual 模式自动切到 Direct（英文直通），
--- 回到 Insert 时恢复原来的 ibus-table 输入状态。
+-- 输入法联动：进入 Normal 模式时强制西文，回到 Insert 时恢复原来的中英状态。
+-- 两者都靠自动命令工作，必须在启动时注册，不能延迟加载；同时只启用一个，
+-- 否则会互相覆盖输入法状态。
 --
--- 只切换同一个 ibus-table 引擎内部的模式，不切换全局输入法。
--- `schema` 用 `ibus engine` 输出的码表名（形如 table:zhengma → "zhengma"）。
--- 查看状态：:IBusTableRemoteStatus
+-- 当前系统输入法是 Rime，使用 ibus-rime-remote.nvim；
+-- 它调用 PATH 上的 `ibus-rime-remote` 命令（:checkhealth ibus-rime-remote 检查）。
+-- 仓库：https://github.com/uzvg/ibus-rime-remote.nvim
 --
+-- ibus-table-remote.nvim 保留配置但禁用，切回 ibus-table 时改 enabled = true。
+-- 它只切换 ibus-table 引擎内部的 Table/Direct 模式，`schema` 取 `ibus engine`
+-- 输出里的码表名（形如 table:zhengma → "zhengma"）。
 -- 仓库：https://github.com/uzvg/ibus-table-remote.nvim
 return {
   {
     "uzvg/ibus-table-remote.nvim",
-    -- 通过 ModeChanged 自动命令工作，必须在启动时注册，不能延迟加载。
+    enabled = false,
     lazy = false,
     opts = {
       schema = "zhengma",
     },
+  },
+  {
+    "uzvg/ibus-rime-remote.nvim",
+    lazy = false,
   },
 
   -- outline.nvim（LazyVim 的 editor.outline extra）默认 position="right" 会执行
